@@ -1,1 +1,6 @@
+# compiled fles and IDE configs
 .vscode
+__pycache__
+
+# folders
+twt/*
