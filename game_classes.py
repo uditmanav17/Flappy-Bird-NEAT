@@ -20,35 +20,54 @@ STAT_FONT = pygame.font.SysFont("comicsans", 50)
 
 
 class Bird:
+    """
+    Bird class representing the flappy bird
+    """
+
+    TERMINAL_VEL = 10
     IMGS = BIRD_IMGS
     MAX_ROTATION = 25  # for tilting bird
     ROT_VEL = 20  # rotation on each frame
     ANIMATION_TIME = 5  # flapping wings
 
     def __init__(self, x, y):
+        """
+        Initialize the object
+        :param x: starting x pos (int)
+        :param y: starting y pos (int)
+        :return: None
+        """
         self.x = x  # starting x
-        self.y = y  # starting x
+        self.y = y  # starting y
         self.tilt = 0  # starting tilt
-        self.tick_count = 0  #
+        self.tick_count = 0  # bird's height, same as y-position
         self.vel = 0  # starting velocity
         self.height = self.y
         self.img_count = 0  # bird img
         self.img = self.IMGS[0]
 
     def jump(self):
-        """flap up"""
+        """
+        make the bird jump
+        :return: None
+        """
         self.vel = -10.5
         self.tick_count = 0  # keep track of when we last jump
         self.height = self.y  # from which position bird started jumping
 
     def move(self):
+        """
+        make the bird move
+        :return: None
+        """
         self.tick_count += 1
-        # equation for displacement of bird
+
+        # equation for displacement of bird, downward acceleration
         d = self.vel * self.tick_count + 1.5 * self.tick_count ** 2
 
         # setting terminal velocity, so we don't go move too fast
-        if d > 16:
-            d = 16
+        if d > self.TERMINAL_VEL:
+            d = self.TERMINAL_VEL
 
         # before moving upward move a bit more
         if d < 0:
@@ -61,12 +80,18 @@ class Bird:
         if d < 0 or self.y < (self.height + 50):
             if self.tilt < self.MAX_ROTATION:
                 self.tilt = self.MAX_ROTATION
-        else:
+        else:  # tilt down
             if self.tilt > -90:
                 self.tilt -= self.ROT_VEL
 
     def draw(self, win):
+        """
+        draw the bird
+        :param win: pygame window or surface
+        :return: None
+        """
         self.img_count += 1
+
         # for flapping wings animation
         if self.img_count < self.ANIMATION_TIME:
             self.img = self.IMGS[0]
@@ -95,41 +120,77 @@ class Bird:
         win.blit(rotated_image, new_rect.topleft)
 
     def get_mask(self):
+        """
+        gets the mask for the current image of the bird
+        :return: None
+        """
         return pygame.mask.from_surface(self.img)
 
 
 class Pipe:
+    """
+    represents a pipe object
+    """
+
     GAP = 200  # gap bw pipes
     VEL = 5  # movement speed of pipe
 
     def __init__(self, x):
+        """
+        initialize pipe object
+        :param x: int
+        :param y: int
+        :return" None
+        """
         self.x = x
         self.height = 0
 
+        # where the top and bottom of the pipe is
         self.top = 0
         self.bottom = 0
+
         self.PIPE_TOP = pygame.transform.flip(PIPE_IMG, False, True)
         self.PIPE_BOTTOM = PIPE_IMG
 
-        self.passed = False
+        self.passed = False  # used to check if bird has passed the pipe
         self.set_height()
 
     def set_height(self):
+        """
+        set the height of the pipe, from the top of the screen
+        :return: None
+        """
         self.height = random.randrange(50, 450)
         self.top = self.height - self.PIPE_TOP.get_height()
         self.bottom = self.height + self.GAP
 
     def move(self):
+        """
+        move pipe based on vel
+        :return: None
+        """
         self.x -= self.VEL
 
     def draw(self, win):
-        win.blit(self.PIPE_TOP, (self.x, self.top))
-        win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
+        """
+        draw both the top and bottom of the pipe
+        :param win: pygame window/surface
+        :return: None
+        """
+        win.blit(self.PIPE_TOP, (self.x, self.top))  # draw top pipe
+        win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))  # draw bottom pipe
 
     def collide(self, bird):
-        bird_mask = bird.get_mask()
-        top_mask = pygame.mask.from_surface(self.PIPE_TOP)
-        bottom_mask = pygame.mask.from_surface(self.PIPE_BOTTOM)
+        """
+        returns if a point is colliding with the pipe
+        :param bird: Bird object
+        :return: Bool
+        """
+        bird_mask = bird.get_mask()  # get bird's mask
+        top_mask = pygame.mask.from_surface(self.PIPE_TOP)  # get top pipe's mask
+        bottom_mask = pygame.mask.from_surface(
+            self.PIPE_BOTTOM
+        )  # get bottom pipe's mask
 
         top_offset = (self.x - bird.x, self.top - round(bird.y))
         bottom_offset = (self.x - bird.x, self.bottom - round(bird.y))
@@ -138,6 +199,7 @@ class Pipe:
         b_point = bird_mask.overlap(bottom_mask, bottom_offset)
         t_point = bird_mask.overlap(top_mask, top_offset)
 
+        # if masks overlap, collision occured
         if b_point or t_point:
             return True
 
@@ -145,19 +207,33 @@ class Pipe:
 
 
 class Base:
+    """
+    Represnts the moving floor of the game
+    """
+
     VEL = 5
     WIDTH = BASE_IMG.get_width()
     IMG = BASE_IMG
 
     def __init__(self, y):
-        self.y = y
-        self.x1 = 0
-        self.x2 = self.WIDTH
+        """
+        Initialize the object
+        :param y: int
+        :return: None
+        """
+        self.y = y  # location of floor on screen
+        self.x1 = 0  # front end of floor
+        self.x2 = self.WIDTH  # back end of floor
 
     def move(self):
+        """
+        move floor, for effects
+        :return: None
+        """
         self.x1 -= self.VEL
         self.x2 -= self.VEL
 
+        # if floor moves out of the window
         if self.x1 + self.WIDTH < 0:
             self.x1 = self.x2 + self.WIDTH
 
@@ -165,5 +241,10 @@ class Base:
             self.x2 = self.x1 + self.WIDTH
 
     def draw(self, win):
+        """
+        Draw the floor. This is two images that move together.
+        :param win: the pygame surface/window
+        :return: None
+        """
         win.blit(self.IMG, (self.x1, self.y))
         win.blit(self.IMG, (self.x2, self.y))
