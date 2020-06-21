@@ -19,7 +19,7 @@ GAME_WINDOW = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), RESIZABLE)
 # WIN_WIDTH = 500 // 2
 # WIN_HEIGHT = 800 // 2
 
-# TODO Implement draw_lines
+
 def draw_window(win, birds, pipes, base, score, gen, alive, pipe_ind=0):
     """
     draws the windows for the main game loop
@@ -50,31 +50,32 @@ def draw_window(win, birds, pipes, base, score, gen, alive, pipe_ind=0):
     base.draw(win)
     for bird in birds:
         if DRAW_LINES:
+            # there is a chance that this will fail, hence try block
             try:
                 # bird to pipe top line
                 pygame.draw.line(
-                    win,
-                    (255, 0, 0),
+                    win,  # window
+                    (255, 0, 0),  # line color
                     (
-                        bird.x + bird.img.get_width() // 2,
-                        bird.y + bird.img.get_height() // 2,
-                    ),
+                        bird.x + bird.img.get_width() / 2,
+                        bird.y + bird.img.get_height() / 2,
+                    ),  # starting point
                     (
-                        pipes[pipe_ind].x + pipes[pipe_ind].PIPE_TOP.get_width() // 2,
+                        pipes[pipe_ind].x + pipes[pipe_ind].PIPE_TOP.get_width() / 2,
                         pipes[pipe_ind].height,
-                    ),
-                    1,
+                    ),  # end point
+                    1,  # line width
                 )
                 # bird to pipe bottom line
                 pygame.draw.line(
                     win,
                     (255, 0, 0),
                     (
-                        bird.x + bird.img.get_width() // 2,
-                        bird.y + bird.img.get_height() // 2,
+                        bird.x + bird.img.get_width() / 2,
+                        bird.y + bird.img.get_height() / 2,
                     ),
                     (
-                        pipes[pipe_ind].x + pipes[pipe_ind].PIPE_BOTTOM.get_width() // 2,
+                        pipes[pipe_ind].x + pipes[pipe_ind].PIPE_BOTTOM.get_width() / 2,
                         pipes[pipe_ind].bottom,
                     ),
                     1,
@@ -85,56 +86,9 @@ def draw_window(win, birds, pipes, base, score, gen, alive, pipe_ind=0):
     pygame.display.update()
 
 
-# def main():
-#     bird = Bird(200, 200)
-#     base = Base(730)
-#     pipes = [Pipe(650)]
-#     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), RESIZABLE)
-#     clock = pygame.time.Clock()
-#     run = True
-
-#     score = 0
-
-#     while run:
-#         clock.tick(30)
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 run = False
-#         # bird.move()
-#         add_pipe = False
-#         rem = []  # a list of pipes to be removed
-#         for pipe in pipes:
-#             pipe.move()  # check this
-#             if pipe.collide(bird):
-#                 pass
-
-#             # check when pipe gets off the screen
-#             if pipe.x + pipe.PIPE_TOP.get_width() < 0:
-#                 rem.append(pipe)
-
-#             # check if we have passed the pipe
-#             if not pipe.passed and pipe.x < bird.x:
-#                 pipe.passed = True
-#                 add_pipe = True
-
-#         # if we had passed a pipe, we need to generate new pipe
-#         if add_pipe:
-#             score += 1
-#             pipes.append(Pipe(650))
-
-#         # remove pipes that went out of screen
-#         for r in rem:
-#             pipes.remove(r)
-
-#         # check if bird had hit the ground
-#         if bird.x + bird.img.get_height() > 730:
-#             pass
-
-#         base.move()
-#         draw_window(win, bird, pipes, base, score)
-
-#     pygame.quit()
-#     quit()
+# TODO add function to play yourself
+def play_human():
+    pass
 
 
 def genome_evaluation(genomes, config):
