@@ -1,0 +1,40 @@
+name: ai_bird
+channels:
+  - defaults
+dependencies:
+  - appdirs=1.4.3=pyh91ea838_0
+  - attrs=19.3.0=py_0
+  - black=19.10b0=py_0
+  - ca-certificates=2020.1.1=0
+  - certifi=2020.4.5.1=py38_0
+  - click=7.1.2=py_0
+  - graphviz=2.38=hfd603c8_2
+  - mypy_extensions=0.4.3=py38_0
+  - openssl=1.1.1g=he774522_0
+  - pathspec=0.7.0=py_0
+  - pip=20.0.2=py38_3
+  - python=3.8.3=he1778fa_0
+  - regex=2020.5.14=py38he774522_0
+  - setuptools=46.4.0=py38_0
+  - sqlite=3.31.1=h2a8f88b_1
+  - toml=0.10.0=pyh91ea838_0
+  - typed-ast=1.4.1=py38he774522_0
+  - typing_extensions=3.7.4.1=py38_0
+  - vc=14.1=h0510ff6_4
+  - vs2015_runtime=14.16.27012=hf0eaf9b_2
+  - wheel=0.34.2=py38_0
+  - wincertstore=0.2=py38_0
+  - zlib=1.2.11=h62dcd97_4
+  - pip:
+    - cycler==0.10.0
+    - kiwisolver==1.2.0
+    - matplotlib==3.2.1
+    - neat-python==0.92
+    - numpy==1.18.5
+    - pygame==2.0.0.dev10
+    - pyparsing==2.4.7
+    - python-dateutil==2.8.1
+    - python-graphviz==0.14
+    - six==1.15.0
+prefix: C:\Users\uditm\Anaconda3\envs\ai_bird
+
