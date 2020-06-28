@@ -13,11 +13,9 @@ WIN_HEIGHT = 800
 DRAW_LINES = True
 GENERATION = 0
 FLOOR = 730
-TICKS = 300  # to speed up training, bump it up
+TICKS = 30  # to speed up training, bump it up, this is fps
+STOP_SCORE = 50  # stop training if reached this score
 GAME_WINDOW = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), RESIZABLE)
-
-# WIN_WIDTH = 500 // 2
-# WIN_HEIGHT = 800 // 2
 
 
 def draw_window(win, birds, pipes, base, score, gen, alive, pipe_ind=0):
@@ -97,7 +95,7 @@ def genome_evaluation(genomes, config):
     birds and sets their fitness based on the distance they
     reach in the game.
     """
-    global GENERATION, GAME_WINDOW, TICKS, FLOOR
+    global GENERATION, GAME_WINDOW, TICKS, FLOOR, STOP_SCORE
     # declare genome related variables
     GENERATION += 1
     birds = []  # list containing birds objects
@@ -201,7 +199,7 @@ def genome_evaluation(genomes, config):
         base.move()
         draw_window(win, birds, pipes, base, score, GENERATION, len(birds), pipe_ind)
 
-        if score >= 200:
+        if score >= STOP_SCORE:
             break
 
 
